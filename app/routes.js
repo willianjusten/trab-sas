@@ -32,8 +32,7 @@ module.exports = function(app, passport){
     // Unlink Account
     app.get('/unlink/local', isLoggedIn, function(req, res) {
         var user            = req.user;
-        user.local.email    = undefined;
-        user.local.password = undefined;
+        user.remove({_id: user._id});
         user.save(function(err) {
             res.redirect('/');
         });
@@ -51,11 +50,11 @@ module.exports = function(app, passport){
         req.logout();
         res.redirect('/');
     });
+};
 
-    function isLoggedIn(req, res, next){
-        if(req.isAuthenticated())
-            return next();
+function isLoggedIn(req, res, next){
+    if(req.isAuthenticated())
+        return next();
 
-        res.redirect('/');
-    }
+    res.redirect('/');
 }
