@@ -10,9 +10,33 @@ module.exports = function(app, passport){
         res.render('login.ejs', { message: req.flash('loginMessage') });
     });
 
-    // Signup
+    // Login action
+    app.post('/login', passport.authenticate('local-login', {
+        successRedirect : '/system',
+        failureRedirect : '/login',
+        failureFlash : true
+    }));
+
+    // Signup View
     app.get('/signup', function(req, res){
         res.render('signup.ejs', { message: req.flash('signupMessage')});
+    });
+
+    // Signup Register
+    app.post('/signup', passport.authenticate('local-signup', {
+        successRedirect : '/system',
+        failureRedirect : '/signup',
+        failureFlash : true
+    }));
+
+    // Unlink Account
+    app.get('/unlink/local', isLoggedIn, function(req, res) {
+        var user            = req.user;
+        user.local.email    = undefined;
+        user.local.password = undefined;
+        user.save(function(err) {
+            res.redirect('/');
+        });
     });
 
     // Page system

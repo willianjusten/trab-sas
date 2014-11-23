@@ -1,3 +1,7 @@
 body {
     padding: 80px;
 }
+
+.page-header .fa {
+    padding: 5px;
+}

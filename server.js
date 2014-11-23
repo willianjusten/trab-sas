@@ -14,6 +14,9 @@ var configDB     = require('./config/database.js');
 // Config DB
 mongoose.connect(configDB.url);
 
+// Require passport config
+require('./config/passport')(passport);
+
 // Setup express applications
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -25,6 +28,7 @@ app.use(bodyParser.json());
 
 // Define view engine (maybe change to jade later)
 app.set('view engine', 'ejs');
+
 
 // Setup for passport
 app.use(session({secret: 'trabalhofinaldesas'})); // this is just for session
