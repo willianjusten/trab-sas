@@ -16,7 +16,7 @@ module.exports = function(app, passport){
     });
 
     // Page system
-    app.get('/system', isLogged, function(req, res){
+    app.get('/system', isLoggedIn, function(req, res){
         res.render('system.ejs', {
             user : req.user
         });
