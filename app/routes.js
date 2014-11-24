@@ -96,6 +96,7 @@ module.exports = function(app, passport){
         res.render('iptables.ejs');
     });
 
+    // Iptables action
     app.get('/iptables/:ip/:chain/:rule', function(req, res){
         var ip    = req.params.ip;
         var chain = req.params.chain;
@@ -107,8 +108,6 @@ module.exports = function(app, passport){
                 chain: chain,
                 sudo : true
             });
-
-            res.send("<div class='dsp-tb'><p class='rule'>Ip: "+ip+" - Chain: "+chain+" - Rule: "+rule+"</p><a class='btn btn-danger' href='/iptables/"+ip+"/"+chain+"/"+rule+"/del'><i class='fa fa-trash'></i> Delete</a></div>")
         }
         else {
             iptables.drop({
@@ -116,9 +115,23 @@ module.exports = function(app, passport){
                 chain: req.params.chain,
                 sudo : true
             });
-
-            res.send("<div class='dsp-tb'><p class='rule'>Ip: "+ip+" - Chain: "+chain+" - Rule: "+rule+"</p><a class='btn btn-danger' href='/iptables/"+ip+"/"+chain+"/"+rule+"/del'><i class='fa fa-trash'></i> Delete</a></div>")
         }
+
+        res.send("<div class='dsp-tb'><p class='rule'>Ip: "+ip+" - Chain: "+chain+" - Rule: "+rule+"</p><a data-ip='"+ip+"' data-chain='"+chain+"' data-rule='"+rule+"'  class='del btn btn-danger'><i class='fa fa-trash'></i> Delete</a></div>")
+    });
+
+    // Iptables Delete Rule
+    app.get('/iptables/del/:ip/:chain/:rule', function(req, res){
+        var ip    = req.params.ip;
+        var chain = req.params.chain;
+        var rule  = req.params.rule;
+
+        iptables.deleteRule({
+            src: ip,
+            chain: chain,
+            target: rule,
+            sudo : true
+        })
     });
 
 };

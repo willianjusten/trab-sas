@@ -69,6 +69,25 @@
         })
     });
 
+    function delRule(){
+        $(".del").on('click', function(e){
+            e.preventDefault();
+
+            var ip = $(this).data("ip");
+            var chain = $(this).data("chain");
+            var rule = $(this).data("rule");
+
+            $(this).closest('div').remove();
+
+            $.ajax({
+                url: 'http://192.168.33.10:8080/iptables/del/'+ip+'/'+chain+'/'+rule,
+                type: 'GET'
+            });
+        });
+    }
+
+    $(document).on('click', '.del', delRule);
+
 </script>
 </body>
 </html>
