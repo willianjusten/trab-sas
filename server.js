@@ -10,6 +10,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var configDB     = require('./config/database.js');
+var libnmap      = require('node-libnmap');
 
 // Config DB
 mongoose.connect(configDB.url);
@@ -44,6 +45,7 @@ app.use(express.static(__dirname + '/assets'));
 app.use("/styles", express.static(__dirname + '/assets/styles'));
 app.use("/images", express.static(__dirname + '/assets/images'));
 app.use("/fonts", express.static(__dirname + '/assets/fonts'));
+app.use("/js", express.static(__dirname + '/assets/js'));
 
 // Init server at port
 app.listen(port);

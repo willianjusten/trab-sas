@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+    <title>SAS Final</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"> <!-- load bootstrap css -->
+    <link rel="stylesheet" href="/css/font-awesome.min.css"> <!-- load fontawesome -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <header>
+        <a class="btn btn-default" href="/system"><i class="fa fa-home"></i> Home</a>
+    </header>
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-cog"></span> Nmap</h1>
+        <form class="form-inline">
+            <a id="discover" href="#" class="btn btn-default">Discover</a>
+            <div class="form-group">
+                <label class="sr-only" for="ip">ip</label>
+                <input type="text" class="form-control" id="ip" placeholder="Enter IP to scan">
+            </div>
+            <button id="scan" type="submit" class="btn btn-default">Scan</button>
+        </form>
+    </div>
+
+    <div class="row">
+
+    </div>
+
+    <div class="row">
+        <div id="response">
+            <h2>Discover</h2>
+            <p>Will identify your adapters, ports, neighboors, etc.</p>
+
+            <h2>Scan</h2>
+            <p>Set an ip and see which ports are available and what services are using for.</p>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript" src="/js/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/js/prettyprint.js"></script>
+
+<script>
+
+    $("#discover").on('click', function(e){
+        e.preventDefault();
+
+        $("#response").html("loading...");
+
+        $.ajax({
+            url: 'http://192.168.33.10:8080/nmap/discover',
+            type: 'GET',
+            success: function(response){
+                var pret = prettyPrint(response);
+                $("#response").html(pret);
+            }
+        })
+    });
+
+    $("#scan").on('click', function(e){
+        e.preventDefault();
+        var ip = $("#ip").val();
+
+        $("#response").html("loading...");
+
+        $.ajax({
+            url: 'http://192.168.33.10:8080/nmap/scan/'+ip,
+            type: 'GET',
+            success: function(response){
+                // var json_obj = JSON.stringify(response, null, 4);
+                var pret = prettyPrint(response);
+                $("#response").html(pret);
+            }
+        })
+    });
+
+</script>
+</body>
+</html>

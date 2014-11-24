@@ -1,3 +1,5 @@
+var libnmap      = require('node-libnmap');
+
 module.exports = function(app, passport){
 
     // Home
@@ -49,6 +51,40 @@ module.exports = function(app, passport){
     app.get('/logout', function(req, res){
         req.logout();
         res.redirect('/');
+    });
+
+    // NMAP
+    // ====================================
+
+    // Nmap View
+    app.get('/nmap', isLoggedIn, function(req, res){
+        res.render('nmap.ejs');
+    });
+
+    // Nmap discover
+    app.get('/nmap/discover', function(req, res) {
+        libnmap.nmap('discover', function(err, report){
+          res.header("Access-Control-Allow-Origin", "*");
+          res.json(report);
+          console.log(report);
+        })
+    });
+
+    // Nmap Scan
+    app.get('/nmap/scan/:ip', function(req, res){
+        var opts = {
+          range: [req.params.ip]
+        }
+
+        libnmap.nmap('scan', opts, function(err, report){
+          if (err) throw err
+
+          report.forEach(function(item){
+            res.header("Access-Control-Allow-Origin", "*");
+            res.json(item[0]);
+            console.log(item[0]);
+          })
+        })
     });
 };
 
