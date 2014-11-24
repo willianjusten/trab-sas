@@ -13,14 +13,27 @@
     </header>
 
     <div class="page-header text-center">
-        <h1><span class="fa fa-cog"></span> Nmap</h1>
+        <h1><span class="fa fa-cog"></span> Iptables</h1>
         <form class="form-inline">
-            <a id="discover" href="#" class="btn btn-default">Discover</a>
             <div class="form-group">
                 <label class="sr-only" for="ip">ip</label>
-                <input type="text" class="form-control" id="ip" placeholder="Enter IP to scan">
+                <input type="text" class="form-control" id="ip" placeholder="Enter IP">
             </div>
-            <button id="scan" type="submit" class="btn btn-default">Scan</button>
+            <div class="form-group">
+                <select name="chain" id="chain" class="form-control">
+                    <option value="INPUT">INPUT</option>
+                    <option value="OUTPUT">OUTPUT</option>
+                    <option value="FORWARD">FORWARD</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <select name="rule" id="rule" class="form-control">
+                    <option value="ACCEPT">ACCEPT</option>
+                    <option value="DROP">DROP</option>
+                </select>
+            </div>
+
+            <button id="execute" type="submit" class="btn btn-default">Execute</button>
         </form>
     </div>
 
@@ -30,11 +43,7 @@
 
     <div class="row">
         <div id="response">
-            <h2>Discover</h2>
-            <p>Will identify your adapters, ports, neighboors, etc.</p>
 
-            <h2>Scan</h2>
-            <p>Set an ip and see which ports are available and what services are using for.</p>
         </div>
     </div>
 
@@ -45,34 +54,17 @@
 
 <script>
 
-    $("#discover").on('click', function(e){
-        e.preventDefault();
-
-        $("#response").html("loading...");
-
-        $.ajax({
-            url: 'http://192.168.33.10:8080/nmap/discover',
-            type: 'GET',
-            success: function(response){
-                var pret = prettyPrint(response);
-                $("#response").html(pret);
-            }
-        })
-    });
-
-    $("#scan").on('click', function(e){
+    $("#execute").on('click', function(e){
         e.preventDefault();
         var ip = $("#ip").val();
-
-        $("#response").html("loading...");
+        var chain = $("#chain").val();
+        var rule = $("#rule").val();
 
         $.ajax({
-            url: 'http://192.168.33.10:8080/nmap/scan/'+ip,
+            url: 'http://192.168.33.10:8080/iptables/'+ip+'/'+chain+'/'+rule,
             type: 'GET',
             success: function(response){
-                // var json_obj = JSON.stringify(response, null, 4);
-                var pret = prettyPrint(response);
-                $("#response").html(pret);
+                $("#response").append(response);
             }
         })
     });

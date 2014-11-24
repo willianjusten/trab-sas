@@ -1,4 +1,5 @@
 var libnmap      = require('node-libnmap');
+var iptables     = require('iptables');
 
 module.exports = function(app, passport){
 
@@ -86,6 +87,40 @@ module.exports = function(app, passport){
           })
         })
     });
+
+    // IPtables
+    // ====================================
+
+    // Iptables View
+    app.get('/iptables', isLoggedIn, function(req, res){
+        res.render('iptables.ejs');
+    });
+
+    app.get('/iptables/:ip/:chain/:rule', function(req, res){
+        var ip    = req.params.ip;
+        var chain = req.params.chain;
+        var rule  = req.params.rule;
+
+        if (rule === 'ACCEPT'){
+            iptables.allow({
+                src : ip,
+                chain: chain,
+                sudo : true
+            });
+
+            res.send("<div class='dsp-tb'><p class='rule'>Ip: "+ip+" - Chain: "+chain+" - Rule: "+rule+"</p><a class='btn btn-danger' href='/iptables/"+ip+"/"+chain+"/"+rule+"/del'><i class='fa fa-trash'></i> Delete</a></div>")
+        }
+        else {
+            iptables.drop({
+                src : req.params.ip,
+                chain: req.params.chain,
+                sudo : true
+            });
+
+            res.send("<div class='dsp-tb'><p class='rule'>Ip: "+ip+" - Chain: "+chain+" - Rule: "+rule+"</p><a class='btn btn-danger' href='/iptables/"+ip+"/"+chain+"/"+rule+"/del'><i class='fa fa-trash'></i> Delete</a></div>")
+        }
+    });
+
 };
 
 function isLoggedIn(req, res, next){

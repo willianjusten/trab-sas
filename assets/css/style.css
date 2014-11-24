@@ -5,3 +5,14 @@ body {
 .page-header .fa {
     padding: 5px;
 }
+
+.rule {
+    float: left;
+    margin: 10px 20px;
+    width: 325px;
+}
+
+.dsp-tb {
+    display: table;
+    height: 60px;
+}

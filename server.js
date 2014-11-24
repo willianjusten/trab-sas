@@ -11,6 +11,7 @@ var bodyParser   = require('body-parser');
 var session      = require('express-session');
 var configDB     = require('./config/database.js');
 var libnmap      = require('node-libnmap');
+var iptables     = require('iptables');
 
 // Config DB
 mongoose.connect(configDB.url);
